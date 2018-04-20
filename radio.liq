@@ -1,29 +1,80 @@
 #!/usr/bin/liquidsoap
-# Log dir
-set("log.file.path","/tmp/basic-radio.log")
 
-# Music
-myplaylist = playlist("~/radio/playlist01.pls")
-# Some jingles
-#jingles = playlist("~/radio/jingles.m3u")
+# Log dir
+set("log.file.path","/tmp/barcelona-radio.log")
+set("log.stdout",true)
+
+# Sounds
+#myplaylist = playlist("~/radio/playlist01.pls")
+
+indoor_ambiences = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/indoor_ambiences")
+outdoor_ambiences = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/outdoor_ambiences")
+street_ambiences = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/street_ambiences")
+market_ambiences = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/market_ambiences")
+park_ambiences = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/park_ambiences")
+
+# fountains, seaside, waves, drains, rain
+water_sounds = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/water_sounds")
+
+# the witching hour
+the_city_sleeps = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/the_city_sleeps")
+
+# up close detailed sounds
+closeup_sounds = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/closeup_sounds")
+
+# people - "?"
+interviews_clips = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/interview_clips")
+
+# ambiences from airport, train stations, bus journeys etc. "the next stop will be..."
+transport_sounds = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/transport_sounds")
+
+pedestrian_journeys = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/pedestrian_journeys")
+
+other = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/other")
+
+
+# Some interviews
+interviews = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/interview_clips")
+
 # If something goes wrong, we'll play this
-security = single("~/radio/sounds/barcelona_test.wav")
+#security = single("sounds/audiocheck.net_sweep_10Hz_10000Hz_-3dBFS_10s.wav")
+security = single("sounds/error.ogg")
 
 # Start building the feed with music
-radio = myplaylist
-# Now add some jingles
-#radio = random(weights = [1, 4],[jingles, radio])
+#radio = myplaylist
+
+stereo_night = add(normalize=true,[
+       security,
+       park_ambiences
+       ])
+
+#    x = stereo.pan(pan=p, field=90., x)    
+
+day=market_ambiences
+night=stereo_night
+daily_message = security
+
+radio = fallback([ switch([({ 6h-18h }, 
+day),({ 18h-21h05 }, night),({ 21h05-21h15 }, daily_message),({ 21h15-6h }, 
+night)])])
+
+# Now add some interviews
+# radio = random(weights = [1, 4],[interviews, radio])
+
 # And finally the security
 radio = fallback(track_sensitive = false, [radio, security])
-radio=mksafe(radio)
+radio = mksafe(radio)
+
+
+
+
 
  # Stream it out
-
 output.icecast(%mp3,
   description="Coventry University - BA Digital Media -50undz of BCN",
   genre="Experimental",
   host = "localhost", port = 8000,
-  password = "*****", mount = "stream.mp3", 
+  password = "hackmeCUdmvm", mount = "stream.mp3", 
   radio)
 
 encoder_heaac_64k = %fdkaac(channels=2, samplerate=44100, bitrate=64, aot="mpeg2_he_aac_v2", transmux="adts")
