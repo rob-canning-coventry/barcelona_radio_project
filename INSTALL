@@ -1,0 +1,46 @@
+Thanks a lot for your reply.
+I went the OPAM way.
+
+    Install the following Ubuntu packages
+
+    "wget","unzip","aspcud","m4","git","pkg-config",
+    "libpcre3-dev",
+    "ncurses-dev","libogg-dev",
+    "libtool","g++","libxml-dom-perl","festival",
+    "libmp3lame-dev","libflac++-dev",
+    "libmad0-dev", "libshout3-dev", "libvorbis-dev", "libid3tag0-dev",
+    "libasound2-dev", "autoconf", "automake",
+    "swh-plugins",
+    "liblo-dev",
+    "libmad0",
+    "libspeex1", "libspeex-dev",
+    "libtheora0", "libtheora-dev",
+    "libvo-aacenc0", "libvo-aacenc-dev",
+    "libfdk-aac0", "libfdk-aac-dev",
+    "libsoundtouch0", "libsoundtouch-dev",
+    "libsamplerate0", "libsamplerate0-dev",
+    "libflac++6", "libflac8",
+    "libmp3lame0",
+    "dssi-dev",
+    "libpulse0", "libpulse-dev",
+    "libtag1c2a", "libtag1-dev",
+    "libvorbis0a",
+    "libopus0", "libopus-dev",
+    "libfaad2", "libfaad-dev"
+
+    Install OPAM
+
+sudo add-apt-repository ppa:avsm/ppa
+sudo apt-get update
+sudo apt-get install -y ocaml ocaml-native-compilers camlp4-extra opam
+opam init
+eval `opam config env`
+opam install pcre --yes
+opam install camomile --yes
+opam install xmlm --yes
+
+    Install Liquidsoap
+
+opam install cry alsa pulseaudio mad taglib lame ogg vorbis opus voaacenc fdkaac faad flac ladspa soundtouch samplerate xmlplaylist dtools duppy mm liquidsoap
+
+Thanks again
