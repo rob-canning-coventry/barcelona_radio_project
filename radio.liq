@@ -43,14 +43,18 @@ security = single("sounds/error.ogg")
 # Start building the feed with music
 #radio = myplaylist
 
+street_ambiences = stereo.pan(pan=-0.5, field=30., street_ambiences)
+street_ambiences = echo(street_ambiences, delay=0.5, feedback=-6. )
+
+
 stereo_night = add(normalize=true,[
-       security,
-       park_ambiences
+       street_ambiences,
+       street_ambiences
        ])
 
-#    x = stereo.pan(pan=p, field=90., x)    
+#stereo_night = stereo.pan(pan=-0.5, field=30., stereo_night)    
 
-day=market_ambiences
+day=street_ambiences
 night=stereo_night
 daily_message = security
 
