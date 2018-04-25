@@ -25,8 +25,8 @@ def radio_mixer(p, d, f, s)
 
 # this bit gives different audio playlist streams a different position
 # in the stereo field and delay parameters
-a = radio_mixer(-0.8, 4.0, -9., contemplative_spaces1)
-b = radio_mixer( 0.8, 3.7, -9., contemplative_spaces2)
+a = radio_mixer(-0.5, 4.0, -9., contemplative_spaces1)
+b = radio_mixer( 0.5, 3.7, -9., contemplative_spaces2)
 # -----------------
 # this bit adds all the different audio streams together in a montage
 # you can add as many as you like a, b, c, d, etc. - 
@@ -34,16 +34,18 @@ out = add(normalize=true,[
        a,
        b
        ])
+       
 # -----------------
 # this adds some reverb to the overall mix
 # to find more about the parameters of these ladspa effects
 # liquidsoap -h ladspa.zita_reverb
-out = ladspa.zita_reverb(out)
+out = ladspa.zita_reverb(damping=15000., output_mix=0.4,out)
+
 # -----------------
 
 day=out
 night=out
-daily_message = security
+daily_message=security
 
 # -----------------
 
@@ -78,8 +80,8 @@ def stream (c,m,o)
     # stream: a function to create mountpoints
     out = output.icecast(c,
     host="localhost", port=8000,
-    description="Coventry University - BA Digital Media -50undz of BCN",
-    genre="Network Music",url="http://aslkfjslkfjslkfjslkfj.net",
+    description="Coventry University, BA Digital Media, 50undz of BCN",
+    genre="Soundscape, Generative",url="http://dmvm.coventry.ac.uk/~ac2131/radioscapeBCN/",
     password="#{PASSWORD}",
     mount = m, fallible=true, icy_metadata="true", o)
     out
