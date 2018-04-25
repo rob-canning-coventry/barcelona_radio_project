@@ -1,108 +1,99 @@
-#!/usr/bin/liquidsoap
+#!/home/COVENTRY.AC.UK/ac2131/.opam/system/bin/liquidsoap
+
+PASSWORD=argv(1)
 
 # Log dir
 set("log.file.path","/tmp/barcelona-radio.log")
 set("log.stdout",true)
 
 # Sounds
-#myplaylist = playlist("~/radio/playlist01.pls")
-
-indoor_ambiences = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/indoor_ambiences")
-outdoor_ambiences = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/outdoor_ambiences")
-street_ambiences = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/street_ambiences")
-market_ambiences = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/market_ambiences")
-park_ambiences = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/park_ambiences")
-
-# fountains, seaside, waves, drains, rain
-water_sounds = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/water_sounds")
-
-# the witching hour
-the_city_sleeps = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/the_city_sleeps")
-
-# up close detailed sounds
-closeup_sounds = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/closeup_sounds")
-
-# people - "?"
-interviews_clips = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/interview_clips")
-
-# ambiences from airport, train stations, bus journeys etc. "the next stop will be..."
-transport_sounds = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/transport_sounds")
-
-pedestrian_journeys = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/pedestrian_journeys")
-
-other = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/other")
-
-
-# Some interviews
-interviews = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/interview_clips")
+contemplative_spaces1 = playlist(mode='randomize',reload=1,reload_mode="rounds", "sounds/contemplative_spaces")
+contemplative_spaces2 = playlist(mode='normal', "sounds/contemplative_spaces")
 
 # If something goes wrong, we'll play this
-#security = single("sounds/audiocheck.net_sweep_10Hz_10000Hz_-3dBFS_10s.wav")
 security = single("sounds/error.ogg")
 
 # Start building the feed with music
-#radio = myplaylist
 
-street_ambiences = stereo.pan(pan=-0.5, field=30., street_ambiences)
-street_ambiences = echo(street_ambiences, delay=0.5, feedback=-6. )
+# radio_mixer: A little function that accepts pan location delay ammount and feedback as arguments
 
+def radio_mixer(p, d, f, s)
+        x = echo(s, delay=d, feedback=f )
+	x = stereo.pan(pan=p, field=90., x)
+	x
+	end
 
-stereo_night = add(normalize=true,[
-       street_ambiences,
-       street_ambiences
+# this bit gives different audio playlist streams a different position
+# in the stereo field and delay parameters
+a = radio_mixer(-0.8, 4.0, -9., contemplative_spaces1)
+b = radio_mixer( 0.8, 3.7, -9., contemplative_spaces2)
+# -----------------
+# this bit adds all the different audio streams together in a montage
+# you can add as many as you like a, b, c, d, etc. - 
+out = add(normalize=true,[
+       a,
+       b
        ])
+# -----------------
+# this adds some reverb to the overall mix
+# to find more about the parameters of these ladspa effects
+# liquidsoap -h ladspa.zita_reverb
+out = ladspa.zita_reverb(out)
+# -----------------
 
-#stereo_night = stereo.pan(pan=-0.5, field=30., stereo_night)    
-
-day=street_ambiences
-night=stereo_night
+day=out
+night=out
 daily_message = security
+
+# -----------------
+
+# This is the scheduling - i.e. which sound montage to play when
+# at the moment we only have one called "out" - but we need to come up with many more!
+day=out
+night=out
+daily_message=security
 
 radio = fallback([ switch([({ 6h-18h }, 
 day),({ 18h-21h05 }, night),({ 21h05-21h15 }, daily_message),({ 21h15-6h }, 
 night)])])
 
+# -----------------
+
 # Now add some interviews
 # radio = random(weights = [1, 4],[interviews, radio])
+
+# -----------------
 
 # And finally the security
 radio = fallback(track_sensitive = false, [radio, security])
 radio = mksafe(radio)
 
+# -----------------
+# Everything below here is for sending the stream to icecast server which makes the
+# internet radio mountpoints found here: http://dmvm.coventry.ac.uk:8000
+# to listen to the stream you can point your browser or media player to:
+# http://dmvm.coventry.ac.uk:8000/stream.aac
 
+# stream: a function to create mountpoints
+def stream (c,m,o)
+    out = output.icecast(c,
+    host="localhost", port=8000,
+    description="Coventry University - BA Digital Media -50undz of BCN",
+    genre="Network Music",url="http://aslkfjslkfjslkfjslkfj.net",
+    password="#{PASSWORD}",
+    mount = m, fallible=true, icy_metadata="true",
+    o
+    )
+    out
+end
 
+# Stream it out  #############################
 
-
- # Stream it out
-output.icecast(%mp3,
-  description="Coventry University - BA Digital Media -50undz of BCN",
-  genre="Experimental",
-  host = "localhost", port = 8000,
-  password = "hackmeCUdmvm", mount = "stream.mp3", 
-  radio)
-
+stream(%mp3,   "stream.mp3", radio)
+stream(%vorbis,"stream.ogg", radio)
+stream(%opus,"stream.opus", radio)
 encoder_heaac_64k = %fdkaac(channels=2, samplerate=44100, bitrate=64, aot="mpeg2_he_aac_v2", transmux="adts")
+stream(encoder_heaac_64k,   "stream.aac", radio)
 
-output.icecast(encoder_heaac_64k,
-description="Coventry University - BA Digital Media -50undz of BCN",
-genre="Experimental",  
-host = "localhost", port = 8000,
-  password = "hackmeCUdmvm", mount = "stream.aac",
-  radio)
+#  password = "hackmeCUdmvm", mount = "stream.opus",
 
-output.icecast(%vorbis(channels=2,samplerate=44100,quality=0.5),
-description="Coventry University - BA Digital Media -50undz of BCN",
-genre="Experimental",
-  host = "localhost", port = 8000,
-  password = "hackmeCUdmvm", mount = "stream.ogg",
-  radio)
-
-output.icecast(%opus,
-description="Coventry University - BA Digital Media -50undz of BCN",
-genre="Experimental",
-  host = "localhost", port = 8000,
-  password = "hackmeCUdmvm", mount = "stream.opus",
-  radio)
-
-#utput.icecast(%mp3,radio,mount="kube",id="kubeMP3",name="KUBE Radio HIGH bandwidth",quality=8,bitrate=128,
- #                   host=kubeHost,port=kubePort,user=kubeUser,password=kubePassword,genre=kubeGenre,url=kubeUrl,description=kubeDesc)
