@@ -53,37 +53,35 @@ day=out
 night=out
 daily_message=security
 
-radio = fallback([ switch([({ 6h-18h }, 
-day),({ 18h-21h05 }, night),({ 21h05-21h15 }, daily_message),({ 21h15-6h }, 
-night)])])
+radio = fallback([ switch([
+({ 6h-18h }, day),
+({ 18h-21h05 }, night),
+({ 21h05-21h15 }, daily_message),
+({ 21h15-6h }, night)])
+])
 
 # -----------------
-
 # Now add some interviews
 # radio = random(weights = [1, 4],[interviews, radio])
-
 # -----------------
-
 # And finally the security
 radio = fallback(track_sensitive = false, [radio, security])
 radio = mksafe(radio)
-
 # -----------------
 # Everything below here is for sending the stream to icecast server which makes the
 # internet radio mountpoints found here: http://dmvm.coventry.ac.uk:8000
 # to listen to the stream you can point your browser or media player to:
 # http://dmvm.coventry.ac.uk:8000/stream.aac
 
-# stream: a function to create mountpoints
+
 def stream (c,m,o)
+    # stream: a function to create mountpoints
     out = output.icecast(c,
     host="localhost", port=8000,
     description="Coventry University - BA Digital Media -50undz of BCN",
     genre="Network Music",url="http://aslkfjslkfjslkfjslkfj.net",
     password="#{PASSWORD}",
-    mount = m, fallible=true, icy_metadata="true",
-    o
-    )
+    mount = m, fallible=true, icy_metadata="true", o)
     out
 end
 
