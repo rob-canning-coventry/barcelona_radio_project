@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>Bootstrap 101 Template</title>
+    <title>radioscapeBCN</title>
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -24,11 +24,21 @@
    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">   
        
       <main role="main" class="inner cover">
-        <h1 class="cover-heading">Cover your page.</h1>
-        <p class="lead">Cover is a one-page template for building simple and beautiful home pages. Download, edit the text, and add your own fullscreen background photo to make it your own.</p>
+        <h1 class="cover-heading">radioscapeBCN</h1>
+        <p class="lead">radioscapeBCN testing one two..... testing test test..</p>
         <p class="lead">
-          <a href="#" class="btn btn-lg btn-secondary">Learn more</a>
+          <a href="#" class="btn btn-lg btn-secondary">Boom!</a>
         </p>
+
+	<video id="radio_el" 
+		src="http://dmvm.coventry.ac.uk:8000/stream.mp3" 
+		src="http://dmvm.coventry.ac.uk:8000/stream.opus" 
+		src="http://dmvm.coventry.ac.uk:8000/stream.aac" 
+		src="http://dmvm.coventry.ac.uk:8000/stream.ogg" 
+		preload="none" controls
+		poster="images/radio.png"> 
+	</video>
+
       </main>
     </div>
 
@@ -38,5 +48,25 @@
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="js/bootstrap.min.js"></script>
     <script src="js/popper.min.js"></script>
+
+    <script>
+      jQuery(function() {
+
+      var radio = jQuery('video').get(0);
+
+      radio.addEventListener('pause',function(){
+      var tmp_src = radio.src;
+      var playtime = radio.currentTime;
+      radio.src = '';
+      radio.load();
+      radio.src = tmp_src;
+      radio.currentTime = playtime;
+      });
+
+      });
+      </script>
+
+
+    
   </body>
 </html>
