@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link rel="shortcut icon" type="image/png" href="http://dmvm.coventry.ac.uk/~ac2131/radioscapeBCN/images/estalada1616favicon.png"/>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,29 +20,76 @@
     <![endif]-->
   </head>
     
-  <body class="text-center">
+  <body class="text-center, full-sceen-bg">
     
    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">   
+        
+     <main role="main" class="inner cover">
+       <h2 class="cover-heading text-justify">RADIOSCAPE BARCELONA (2018 - )</h2>
+       <p class="text-justify small">An experimental collaborative soundscape composition and generative Internet radio station. Broadcasting sonic reflections on Barcelona 24 hours a day.</p>
        
-      <main role="main" class="inner cover">
-        <h1 class="cover-heading">radioscapeBCN</h1>
-        <p class="lead">radioscapeBCN testing one two..... testing test test..</p>
-        <p class="lead">
-          <a href="#" class="btn btn-lg btn-secondary">Boom!</a>
-        </p>
-
-	<video id="radio_el" 
+	<video id="radio_el"
 		src="http://dmvm.coventry.ac.uk:8000/stream.mp3" 
 		src="http://dmvm.coventry.ac.uk:8000/stream.opus" 
 		src="http://dmvm.coventry.ac.uk:8000/stream.aac" 
 		src="http://dmvm.coventry.ac.uk:8000/stream.ogg" 
 		preload="none" controls
 		poster="images/radio.png"> 
-	</video>
+	</video>	
+        <p class="small text-justify">Now Streaming: "Contemplative Spaces"</p>
+	<p class="small text-justify">Next Up: "Evening Remix 01"</p>
+	<p class="small blue">
+	  Radio Schedule: Put this in a nice table<br>
+	  06:00 - 09:00 Contemplative Spaces <br>
+	  09:00 - 12:00 Markets <br>
+	  12:00 - 13:00 Bells <br>
+	  13:00 - 17:00 Journeys <br>
+	  17:00 - 19:00 Evening Remix  <br>
+	  21:00 - 06:00 Late Ambience Remix  <br>
+	</p>
+	
+	<p class=""> Direct Streaming link: <a href="http://dmvm.coventry.ac.uk:8000/stream.aac">http://dmvm.coventry.ac.uk:8000/stream.aac</a></p>
 
+
+	
       </main>
     </div>
 
+   <!--Footer-->
+
+   <footer class="page-footer font-small blue pt-4 mt-4">
+
+     <!--Footer Links-->
+     <div class="container-fluid text-center text-md-left">
+       <div class="row">
+
+	 <!--First column-->
+	 <div class="col-md-6">
+	   <h5 class="text-uppercase">Radioscape, Barcelona (2018)</h5>
+	<p class="">The work is a collaboration beween staff and students of BA Digital Media, Coventry University, UK created while on a field trip partially funded by Coventry University Center For Global Enterprise (CGE). The code for the project can be found on Github <a href="https://github.com/rob-canning-coventry/barcelona_radio_project">here</a>. The project is realised using an open source software stack in including <a href="https://icecast.org/">Icecast 2</a> and <a href="http://savonet.sourceforge.net">Liquidsoap</a>
+	</p>
+
+	 </div>
+	 <!--/.First column-->
+
+	 <!--Second column-->
+	 <div class="col-md-6">
+	   <h5 class="text-uppercase">...</h5>
+
+	 </div>
+	 <!--/.Second column-->
+       </div>
+     </div>
+     <!--/.Footer Links-->
+
+     <!--Copyright-->
+     <div class="footer-copyright py-3 text-center">
+       © 2018 Copyright
+     </div>
+     <!--/.Copyright-->
+
+   </footer>
+   <!--/.Footer-->
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
