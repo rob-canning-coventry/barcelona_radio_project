@@ -1,0 +1,8 @@
+
+https://github.com/kenrestivo/ice-meta-fetcher
+
+this will return JSON formatted data about the stream - can use this to populate a "now playing..." part of the website
+
+./ice_meta_fetcher.py -h dmvm.coventry.ac.uk -p 8000 -m /stream.aac
+
+{"icy-genre": "Network Music", "icy-name": "stream.aac", "icy-pub": "1", "icy-metaint": "16000", "icy-url": "http://aslkfjslkfjslkfjslkfj.net", "icy-description": "Coventry University - BA Digital Media -50undz of BCN", "icy-br": "64"}
