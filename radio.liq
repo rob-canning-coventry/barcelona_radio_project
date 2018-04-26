@@ -56,6 +56,7 @@ night=out
 daily_message=security
 
 radio = fallback([ switch([
+#({0m}, x),
 ({ 6h-18h }, day),
 ({ 18h-21h05 }, night),
 ({ 21h05-21h15 }, daily_message),
@@ -64,7 +65,15 @@ radio = fallback([ switch([
 
 # -----------------
 # Now add some interviews
-# radio = random(weights = [1, 4],[interviews, radio])
+# radio=random(weights = [1, 4],[interviews, radio])
+
+# the clock chimes on the hour
+
+# one dong for 15past
+x= once(single("sounds/bells/one_dong_quater_past_Parròquia_de_la_Mare_de_Déu_de_Betlem_edited.opus"))
+theclock = switch([({15m}, x)])
+radio = add(normalize=true,[radio, theclock])
+
 # -----------------
 # And finally the security
 radio = fallback(track_sensitive = false, [radio, security])
